@@ -1,106 +1,95 @@
-async function loadPaper(){
-  const res = await fetch('data/paper.json', {cache:'no-store'});
-  if(!res.ok){ throw new Error('paper.json load error'); }
-  return await res.json();
+async function loadPaper() {
+  // 캐시 잔존 방지: paper.json에도 버전 쿼리 부여 가능
+  const res = await fetch('data/paper.json?v=1', { cache: 'no-store' });
+  if (!res.ok) throw new Error('Failed to load data/paper.json');
+  return res.json();
 }
 
-function el(sel){ return document.querySelector(sel); }
-
-function setText(sel, text){
-  const node = el(sel);
-  if(node) node.textContent = text ?? '';
-}
-
-function setHTML(sel, html){
-  const node = el(sel);
-  if(node) node.innerHTML = html ?? '';
-}
+const el = (s) => document.querySelector(s);
+const show = (node, visible) => node && node.classList.toggle('d-none', !visible);
+const setText = (s, t) => { const n = el(s); if (n) n.textContent = t ?? ''; };
+const setHTML = (s, h) => { const n = el(s); if (n) n.innerHTML = h ?? ''; };
 
 function setupMedia({ image_url, video_mp4_url }) {
-  const imgPanel = el('#imagePanel');
-  const vidPanel = el('#videoPanel');
-  const imgWrap  = el('#imageWrap');
-  const vidWrap  = el('#videoWrap');
+  const imagePanel = el('#imagePanel');
+  const videoPanel = el('#videoPanel');
 
   if (image_url) {
-    imgWrap.innerHTML = `<img src="${image_url}" alt="teaser">`;
-    if (imgPanel) imgPanel.style.display = 'block';
+    setHTML('#imageWrap', `<img class="img-fluid" src="${image_url}" alt="teaser">`);
+    show(imagePanel, true);
   } else {
-    if (imgPanel) imgPanel.style.display = 'none';
-    imgWrap.innerHTML = '';
+    setHTML('#imageWrap', '');
+    show(imagePanel, false);
   }
 
   if (video_mp4_url) {
-    vidWrap.innerHTML =
-      `<video controls preload="metadata" style="width:100%;height:auto;display:block;background:#000;border-radius:12px;">
-         <source src="${video_mp4_url}" type="video/mp4">
-         MP4을 재생할 수 없습니다.
-       </video>`;
-    if (vidPanel) vidPanel.style.display = 'block';
+    setHTML('#videoWrap', `
+      <video class="w-100" controls preload="metadata" style="background:#000;">
+        <source src="${video_mp4_url}" type="video/mp4">
+        Your browser cannot play MP4 video.
+      </video>`);
+    show(videoPanel, true);
   } else {
-    if (vidPanel) vidPanel.style.display = 'none';
-    vidWrap.innerHTML = '';
+    setHTML('#videoWrap', '');
+    show(videoPanel, false);
   }
 }
 
 function setupLinks({ ieee_url, demo_url, github_url, DVL_url }) {
-  const aIeee = el('#btnIeee');
-  const aDemo = el('#btnDemo');
-  const aGit  = el('#btnGit');
-  const aDVL  = el('#btnDVL');
+  // 버튼: 기본 숨김, 값이 있는 경우에만 href 설정 후 표시
+  const map = [
+    { btn: '#btnIeee', url: ieee_url },
+    { btn: '#btnDemo', url: demo_url },
+    { btn: '#btnGit',  url: github_url },
+    { btn: '#btnDVL',  url: DVL_url },
+  ];
+  map.forEach(({ btn, url }) => {
+    const a = el(btn);
+    if (!a) return;
+    if (url) {
+      a.href = url;
+      a.setAttribute('rel', 'noopener');
+      a.setAttribute('target', '_blank');
+      show(a, true);
+    } else {
+      a.removeAttribute('href');
+      show(a, false);
+    }
+  });
 
-  if (aIeee) {
-    if (ieee_url) { aIeee.href = ieee_url; aIeee.style.display = 'inline-flex'; }
-    else aIeee.style.display = 'none';
-  }
-
-  if (aDemo) {
-    if (demo_url) { aDemo.href = demo_url; aDemo.style.display = 'inline-flex'; }
-    else aDemo.style.display = 'none';
-  }
-
-  if (aGit) {
-    if (github_url) { aGit.href = github_url; aGit.style.display = 'inline-flex'; }
-    else aGit.style.display = 'none';
-  }
-
-  if (aDVL) {
-    if (DVL_url) { aDVL.href = DVL_url; aDVL.style.display = 'inline-flex'; }
-    else aDVL.style.display = 'none';
-  }
-}
-
-function fillMeta({ ieee_url, demo_url, github_url, DVL_url, video_mp4_url }) {
-  setHTML('#metaIeee', ieee_url ? `<a class="btn" href="${ieee_url}" target="_blank" rel="noopener">열기</a>` : '-');
-  setHTML('#metaDemo', demo_url ? `<a class="btn" href="${demo_url}" target="_blank" rel="noopener">열기</a>` : '-');
-  setHTML('#metaGit',  github_url ? `<a class="btn" href="${github_url}" target="_blank" rel="noopener">열기</a>` : '-');
-  setHTML('#metaDVL',  DVL_url ? `<a class="btn" href="${DVL_url}" target="_blank" rel="noopener">열기</a>` : '-');
-  setHTML('#metaMp4',  video_mp4_url ? `<code>${video_mp4_url}</code>` : '-');
+  // Meta: 값 있는 행만 표시
+  if (ieee_url) { setHTML('#metaIeee', `<a class="btn btn-sm btn-outline-dark" href="${ieee_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowIeee'), true); }
+  if (demo_url) { setHTML('#metaDemo', `<a class="btn btn-sm btn-outline-dark" href="${demo_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowDemo'), true); }
+  if (github_url) { setHTML('#metaGit', `<a class="btn btn-sm btn-outline-dark" href="${github_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowGit'), true); }
+  if (DVL_url) { setHTML('#metaDVL', `<a class="btn btn-sm btn-outline-dark" href="${DVL_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowDVL'), true); }
+  if (video_mp4_url) { setHTML('#metaMp4', `<code>${video_mp4_url}</code>`); show(el('#rowMp4'), true); }
 }
 
 async function main() {
   try {
     const paper = await loadPaper();
 
+    // 제목/요약
     document.title = paper.title_main || 'Paper Page';
     setText('#titleMain', paper.title_main || '');
     setText('#titleSub',  paper.title_sub  || '');
+    setText('#desc',      paper.description || '');
 
-    setText('#desc', paper.description || '');
-
+    // 미디어/링크/메타
     setupMedia(paper);
     setupLinks(paper);
-    fillMeta(paper);
   } catch (err) {
     console.error(err);
-    setText('#titleMain', 'paper.json load error');
+    // 오류 시 화면에 드러나지 않도록 모두 숨김
+    show(el('#imagePanel'), false);
+    show(el('#videoPanel'), false);
+    ['#btnIeee','#btnDemo','#btnGit','#btnDVL']
+      .forEach(s => show(el(s), false));
+    ['#rowIeee','#rowDemo','#rowGit','#rowDVL','#rowMp4']
+      .forEach(s => show(el(s), false));
+    setText('#titleMain', 'Failed to load paper.json');
     setText('#titleSub',  '');
     setText('#desc', String(err));
-
-    const imgPanel = el('#imagePanel');
-    const vidPanel = el('#videoPanel');
-    if (imgPanel) imgPanel.style.display = 'none';
-    if (vidPanel) vidPanel.style.display = 'none';
   }
 }
 
