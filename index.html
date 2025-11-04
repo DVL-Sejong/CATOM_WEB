@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Paper Page</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="header">
+    <div class="container">
+        <h1 id="titleMain" class="title"></h1>
+        <div id="titleSub" class="subtitle"></div>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="panel">
+      <div id="desc" class="desc">Bringing up abstract summary...</div>
+    </section>
+
+    <section class="panel media" id="imagePanel" style="display:none;">
+      <div id="imageWrap"></div>
+    </section>
+
+    <section class="panel media" id="videoPanel" style="display:none;">
+      <div id="videoWrap"></div>
+    </section>
+
+    <section class="panel">
+      <div class="actions">
+        <a id="btnIeee" class="btn" href="#" target="_blank" rel="noopener">IEEE page</a>
+        <a id="btnDemo" class="btn" href="#" target="_blank" rel="noopener">Using System Demo</a>
+        <a id="btnGit"  class="btn" href="#" target="_blank" rel="noopener">GitHub</a>
+        <a id="btnDVL" class="btn" href="#" target="_blank" rel="noopener">DVL LAB</a>
+      </div>
+
+      <div class="meta">
+        <div class="item">
+          <div class="label">IEEE</div>
+          <div id="metaIeee" class="value">-</div>
+        </div>
+        <div class="item">
+          <div class="label">Demo</div>
+          <div id="metaDemo" class="value">-</div>
+        </div>
+        <div class="item">
+          <div class="label">GitHub</div>
+          <div id="metaGit" class="value">-</div>
+        </div>
+        <div class="item">
+          <div class="label">MP4 URL</div>
+          <div id="metaMp4" class="value">-</div>
+        </div>
+        <div class="item">
+            <div class="label">DVL LAB</div>
+            <div id="metaDVL" class="value">-</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+        CATOM: Causal Topology Map for Spatiotemporal Traffic Analysis With Granger Causality in Urban Areas
+    </div>
+  </main>
+
+  <script src="assets/script.js"></script>
+</body>
+</html>
