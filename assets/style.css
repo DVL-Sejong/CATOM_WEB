@@ -62,14 +62,14 @@ body{
 
 .link-btn{
   background:#ffffff;
-  border:1px solid #d0d0d0;
-  color:#111;
+  border:1px solid #007bff;
+  color:#007bff;
   display: block;      
   width: 100%;
 }
 
 .link-btn:hover{
-  border-color:#007bff;
+  background:#007bff;
   color:#ffffff;
 }
 
