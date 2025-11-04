@@ -53,16 +53,26 @@ body{
   border-top:1px dashed var(--line); padding-top:10px;
 }
 
+.link-bar{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+  gap: .5rem;
+  width: 100%;
+}
+
 .link-btn{
   background:#ffffff;
   border:1px solid #d0d0d0;
   color:#111;
+  display: block;      
+  width: 100%;
 }
 
 .link-btn:hover{
   border-color:#007bff;
   color:#ffffff;
 }
+
 
 
 @media (max-width:720px){
