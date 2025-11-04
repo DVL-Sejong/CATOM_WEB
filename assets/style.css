@@ -58,19 +58,25 @@ body{
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
   gap: .5rem;
   width: 100%;
+  align-items: stretch;
 }
 
 .link-btn{
+  display: block;      
+  width: 100%;
+  padding: .75rem 1rem;
+  border-radius: 12px;
+  
   background:#ffffff;
   border:1px solid #007bff;
   color:#007bff;
-  display: block;      
-  width: 100%;
+  text-align: center;
 }
 
 .link-btn:hover{
   background:#007bff;
   color:#ffffff;
+  border-color: #007bff;
 }
 
 
