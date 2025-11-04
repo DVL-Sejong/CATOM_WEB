@@ -57,14 +57,6 @@ function setupLinks(paper) {
   });
 }
 
-function fillMeta(paper) {
-  const { ieee_url, demo_url, github_url, DVL_url, video_mp4_url } = paper;
-  if (ieee_url) { setHTML('#metaIeee', `<a class="btn btn-sm btn-outline-dark" href="${ieee_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowIeee'), true); }
-  if (demo_url) { setHTML('#metaDemo', `<a class="btn btn-sm btn-outline-dark" href="${demo_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowDemo'), true); }
-  if (github_url) { setHTML('#metaGit', `<a class="btn btn-sm btn-outline-dark" href="${github_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowGit'), true); }
-  if (DVL_url) { setHTML('#metaDVL', `<a class="btn btn-sm btn-outline-dark" href="${DVL_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowDVL'), true); }
-  if (video_mp4_url) { setHTML('#metaMp4', `<code>${video_mp4_url}</code>`); show(el('#rowMp4'), true); }
-}
 
 async function main() {
   try {
@@ -77,7 +69,6 @@ async function main() {
 
     setupMedia(paper);
     setupLinks(paper);
-    fillMeta(paper);
   } catch (err) {
     console.error(err);
     setText('#titleMain', 'Failed to load paper.json');
