@@ -64,3 +64,18 @@ body{
 @media (max-width:720px){
   .meta{ grid-template-columns:1fr }
 }
+
+.link-bar{
+  display:flex;
+  gap:.5rem;
+  flex-wrap:wrap;       
+  width:100%;
+}
+
+.link-btn{
+  flex:1 1 220px;       
+}
+
+@media (max-width: 576px){
+  .link-btn{ flex:1 1 100%; }
+}
