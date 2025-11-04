@@ -43,11 +43,8 @@ body{
 
 .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:8px }
 .btn{
-  text-decoration:none; padding:10px 14px; border-radius:10px;
-  border:1px solid var(--line); background:#0f172a; color:var(--text);
-  transition:transform .08s ease, border-color .2s ease;
+  border-radius:10px;
 }
-.btn:hover{ transform:translateY(-1px); border-color:var(--accent) }
 
 .meta{
   display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px;
