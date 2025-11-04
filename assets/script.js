@@ -1,6 +1,11 @@
+'use strict';
+
+// 도배 캐시 방지 로그로 현재 버전 확인
+console.log('script.js v1001 loaded');
+
 async function loadPaper() {
-  // 캐시 잔존 방지: paper.json에도 버전 쿼리 부여 가능
-  const res = await fetch('data/paper.json?v=1', { cache: 'no-store' });
+  // GitHub Pages 캐시 회피용 버전 파라미터
+  const res = await fetch('data/paper.json?v=2', { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to load data/paper.json');
   return res.json();
 }
@@ -10,7 +15,8 @@ const show = (node, visible) => node && node.classList.toggle('d-none', !visible
 const setText = (s, t) => { const n = el(s); if (n) n.textContent = t ?? ''; };
 const setHTML = (s, h) => { const n = el(s); if (n) n.innerHTML = h ?? ''; };
 
-function setupMedia({ image_url, video_mp4_url }) {
+function setupMedia(paper) {
+  const { image_url, video_mp4_url } = paper;
   const imagePanel = el('#imagePanel');
   const videoPanel = el('#videoPanel');
 
@@ -35,29 +41,24 @@ function setupMedia({ image_url, video_mp4_url }) {
   }
 }
 
-function setupLinks({ ieee_url, demo_url, github_url, DVL_url }) {
-  // 버튼: 기본 숨김, 값이 있는 경우에만 href 설정 후 표시
+function setupLinks(paper) {
+  const { ieee_url, demo_url, github_url, DVL_url } = paper;
   const map = [
-    { btn: '#btnIeee', url: ieee_url },
-    { btn: '#btnDemo', url: demo_url },
-    { btn: '#btnGit',  url: github_url },
-    { btn: '#btnDVL',  url: DVL_url },
+    { sel: '#btnIeee', url: ieee_url },
+    { sel: '#btnDemo', url: demo_url },
+    { sel: '#btnGit',  url: github_url },
+    { sel: '#btnDVL',  url: DVL_url },
   ];
-  map.forEach(({ btn, url }) => {
-    const a = el(btn);
+  map.forEach(({ sel, url }) => {
+    const a = el(sel);
     if (!a) return;
-    if (url) {
-      a.href = url;
-      a.setAttribute('rel', 'noopener');
-      a.setAttribute('target', '_blank');
-      show(a, true);
-    } else {
-      a.removeAttribute('href');
-      show(a, false);
-    }
+    if (url) { a.href = url; a.target = '_blank'; a.rel = 'noopener'; show(a, true); }
+    else { a.removeAttribute('href'); show(a, false); }
   });
+}
 
-  // Meta: 값 있는 행만 표시
+function fillMeta(paper) {
+  const { ieee_url, demo_url, github_url, DVL_url, video_mp4_url } = paper;
   if (ieee_url) { setHTML('#metaIeee', `<a class="btn btn-sm btn-outline-dark" href="${ieee_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowIeee'), true); }
   if (demo_url) { setHTML('#metaDemo', `<a class="btn btn-sm btn-outline-dark" href="${demo_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowDemo'), true); }
   if (github_url) { setHTML('#metaGit', `<a class="btn btn-sm btn-outline-dark" href="${github_url}" target="_blank" rel="noopener">Open</a>`); show(el('#rowGit'), true); }
@@ -69,27 +70,23 @@ async function main() {
   try {
     const paper = await loadPaper();
 
-    // 제목/요약
     document.title = paper.title_main || 'Paper Page';
     setText('#titleMain', paper.title_main || '');
     setText('#titleSub',  paper.title_sub  || '');
     setText('#desc',      paper.description || '');
 
-    // 미디어/링크/메타
     setupMedia(paper);
     setupLinks(paper);
+    fillMeta(paper);
   } catch (err) {
     console.error(err);
-    // 오류 시 화면에 드러나지 않도록 모두 숨김
-    show(el('#imagePanel'), false);
-    show(el('#videoPanel'), false);
-    ['#btnIeee','#btnDemo','#btnGit','#btnDVL']
-      .forEach(s => show(el(s), false));
-    ['#rowIeee','#rowDemo','#rowGit','#rowDVL','#rowMp4']
-      .forEach(s => show(el(s), false));
     setText('#titleMain', 'Failed to load paper.json');
     setText('#titleSub',  '');
     setText('#desc', String(err));
+    show(el('#imagePanel'), false);
+    show(el('#videoPanel'), false);
+    ['#btnIeee','#btnDemo','#btnGit','#btnDVL'].forEach(s => show(el(s), false));
+    ['#rowIeee','#rowDemo','#rowGit','#rowDVL','#rowMp4'].forEach(s => show(el(s), false));
   }
 }
 
